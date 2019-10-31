@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<!--<script src="./LoadMore.js"></script>-->
+	<script src="inView.js"></script>
+	<style type="text/css">
+		.container{
+			width:500px;
+			height:500px;
+			padding:10px 0;
+			border:3px solid gray;
+			overflow-y:scroll;
+		}
+		.list-container{
+			margin:0;
+			padding:0 0 300px;
+		}
+		.list-item{
+			height:50px;
+			list-style:none;
+			border:1px solid red;
+			margin:5px 0;
+			text-align:center;
+			line-height:50px;
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+	<ul class="list-container">
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+		<li class="list-item">test item list</li>
+	</ul>
+</div>
+<div>
+</div>
+<script>
+
+ var num = 0;
+ var initLoadMore = null;
+ var hasLoadMore ;
+
+ window.addEventListener("load", function(){
+	 var listLength  = 0;
+
+ 		window.addEventListener('scroll',function(){
+
+			 listLength = document.querySelectorAll('.list-item').length;
+			// 通过判断li 标签的个数来决定是否继续监听目标元素
+				if(listLength > 16){
+					hasLoadMore = false;
+				} else{
+					hasLoadMore = true;
+				}
+
+			if(hasLoadMore && !initLoadMore){  //需要LoadMore 时， 实例化 LoadMore
+				// 如果内部有滚动条，则需要设置一个container
+				let rootEle = document.querySelector('.container');
+				initLoadMore = new inView('.list-container',handleCallback,{root:rootEle,rootMargin:"0px 0px 300px 0px"});
+			} else if(!hasLoadMore){ // 不需要 LoadMore 时，停止对目标元素的观察，并且注销实例
+				initLoadMore  && initLoadMore.unobserve();
+				initLoadMore = null;
+			}
+
+		},true);
+ },false);
+
+
+function handleCallback (){
+	var listContainer = document.querySelector('.list-container');
+	var node=document.createElement("li");
+	var text = document.createTextNode('这是新增加的文本'+ num);
+	node.appendChild(text);
+	node.className = 'list-item added-text';
+	num = num +1;
+	listContainer.appendChild(node);
+}
+
+</script>
+</body>
+</html>
